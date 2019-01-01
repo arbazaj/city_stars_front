@@ -12,7 +12,7 @@ declare var $: any;
 export class SidebarComponent implements OnInit {
   showMenu = '';
   showSubMenu = '';
-  public sidebarnavItems: any[];
+  public sidebarnavItems: any= [];
   // this is for the open close
   addExpandClass(element: any) {
     if (element === this.showMenu) {
