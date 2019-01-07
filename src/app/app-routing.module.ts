@@ -25,7 +25,7 @@ export const Approutes: Routes = [
     component: BlankComponent,
     children: [
       {
-        path: 'authentication',
+        path: '',
         loadChildren:
           './components/authentication/authentication.module#AuthenticationModule'
       }
