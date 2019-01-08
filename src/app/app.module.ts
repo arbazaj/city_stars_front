@@ -23,7 +23,7 @@ import { BlankComponent } from './components/layouts/blank/blank.component';
 import { NavigationComponent } from './components/shared/header-navigation/navigation.component';
 import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 import { BreadcrumbComponent } from './components/shared/breadcrumb/breadcrumb.component';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { Approutes } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './components/shared/spinner.component';
@@ -57,6 +57,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    NgxSpinnerModule,
     NgbModule.forRoot(),
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(Approutes),

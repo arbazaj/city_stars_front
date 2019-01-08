@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html'
+    selector: 'app-signup',
+    templateUrl: './signup.component.html'
 })
 export class SignupComponent {
-  constructor() {}
+	public baseUrl = environment.baseUrl;
+	constructor() {}
 
 }
