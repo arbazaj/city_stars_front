@@ -10,7 +10,7 @@ export class AuthService  {
     constructor(private http: HttpClient) { }
 
     loginFb() {
-        return this.http.get(environment.baseUrl+'/login/facebook/');
+        return this.http.get(environment.baseUrl+'/test');
     }
 
     loginGoogle() {

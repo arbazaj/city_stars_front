@@ -1,15 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../../services/auth.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
 selector: 'app-login',
 templateUrl: './login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 	constructor(
-		private authService: AuthService
+		private authService: AuthService,
+		private route: ActivatedRoute,
+		private router: Router
 	) {}
 
+	ngOnInit() {
+		this.route.queryParams.subscribe(params => {
+			let token = params['token'];
+			if(token!=null) {
+				this.router.navigateByUrl('user/dashboard');
+			}
+            
+        });
+	}
 	loginform = true;
 	recoverform = false;
 
@@ -18,15 +30,4 @@ export class LoginComponent {
 		this.recoverform = !this.recoverform;
 	}
 
-	loginFb() {
-		this.authService.loginFb().subscribe((result: any) => {
-			console.log(result);
-		});
-	}
-
-	loginGoogle() {
-		this.authService.loginGoogle().subscribe((result: any) => {
-			console.log(result);
-		});
-	}
 }
