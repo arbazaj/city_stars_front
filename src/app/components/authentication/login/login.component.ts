@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from "../../../services/auth.service";
+import { UserService } from "../../../services/user.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { environment } from '../../../../environments/environment';
-import { SpinnerService } from '../../../services/spinner.service'
+import { SpinnerService } from '../../../services/spinner.service';
+import { ToastrService } from 'ngx-toastr';
+import { CodeConstants } from '../../../code_constants';
 
 @Component({
 selector: 'app-login',
@@ -16,25 +18,49 @@ export class LoginComponent implements OnInit {
         email:'',
         password:''
     }
+    public userInfo: any = {};
 	constructor(
-		private authService: AuthService,
+		private userService: UserService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private spinner: SpinnerService
+		private spinner: SpinnerService,
+		private toasterservice:ToastrService,
 	) {}
 
 	ngOnInit() {
 		this.route.queryParams.subscribe(params => {
 			let token = params['token'];
-			this.spinner.show();
 			if(token!=null) {
-				this.router.navigateByUrl('user/dashboard');
+				this.spinner.show();
+				this.userService.getUserByToken(token).subscribe((result:any) => {
+					console.log(result);
+					if(result) {
+						this.userInfo = {
+			                token_key: result['data'].accessToken,
+			                role: result['data']['role'],
+			                email: result['data']['email'],
+			                _id: result['data']['_id'],
+			                imageUrl: result['data']['imageUrl'],
+			                provider: result['data']['provider'],
+			                gender: result['data']['gender']
+			            }
+			            localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
+			            this.spinner.hide();
+						this.toasterservice.success(CodeConstants.MSGS.LOGIN_SUCCESS);
+						this.router.navigateByUrl('user/dashboard');	
+					} else {
+						this.spinner.hide();
+						this.toasterservice.error(CodeConstants.MSGS.ERROR_MSG);
+					}
+				},
+				err => {
+					this.spinner.hide();
+					this.toasterservice.error(CodeConstants.MSGS.ERROR_MSG);
+				});
+				
 			}
-			this.spinner.hide();
-            
         });
 	}
-
 
     onSubmit(){
     // this.spinner.show();

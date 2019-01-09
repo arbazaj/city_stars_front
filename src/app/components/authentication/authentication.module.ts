@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { NotfoundComponent } from './404/not-found.component';
 import { LockComponent } from './lock/lock.component';
@@ -16,6 +17,7 @@ import { AuthenticationRoutes } from './authentication.routing';
     CommonModule,
     RouterModule.forChild(AuthenticationRoutes),
     NgbModule,
+    ToastrModule.forRoot(),
     FormsModule
   ],
   declarations: [
