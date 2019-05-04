@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit {
     onSubmit(){
     	this.spinner.show();
     	this.userService.authUser(this.loginuser).subscribe((result:any)=>{
+			console.log(result)
 			this.userInfo = {
 				token_key: result['data'].accessToken,
 				role: result['data']['role'],
@@ -75,10 +76,12 @@ export class LoginComponent implements OnInit {
 				_id: result['data']['_id'],
 				imageUrl: result['data']['imageUrl'],
 				provider: result['data']['provider'],
-				gender: result['data']['gender']
+				gender: result['data']['gender'],
+				name: result['data']['name']
 			}
 			localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
 			this.spinner.hide();
+			this.toasterService.success(CodeConstants.MSGS.LOGIN_SUCCESS);
 			this.router.navigateByUrl(this.userInfo.role +'/dashboard');
 		},
 		err=>{

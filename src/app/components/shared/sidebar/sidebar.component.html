@@ -4,10 +4,13 @@
         <li>
             <!-- User Profile-->
             <div class="user-profile m-t-20" ngbDropdown>
-                <div class="user-pic" *ngIf="userImage">
+                <div class="user-pic" *ngIf="userInfo && userImage">
                     <img src="{{userImage}}" alt="users" class="rounded-circle img-fluid" />
                 </div>
-                <div class="user-pic" *ngIf="!userImage">
+                <div class="user-pic" *ngIf="userInfo && name">
+                        <h5 class="m-b-10 user-name font-medium">Welcome {{name}}</h5>
+                    </div>
+                <div class="user-pic" *ngIf="!userInfo">
                     <!-- Login -->
                     <a href="/login" class="m-b-10 user-name font-medium">Signin / Signup</a>
                 </div>
