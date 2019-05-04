@@ -15,7 +15,7 @@ import { CalendarModule, CalendarDateFormatter } from 'angular-calendar';
 import { UserRoutes } from './user.routing';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
@@ -29,7 +29,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     PerfectScrollbarModule,
     CalendarModule.forRoot(),
     NgxChartsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    SharedModule
   ],
   declarations: [
     DashboardComponent,
