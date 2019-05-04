@@ -10,6 +10,14 @@ export const ROUTES: RouteInfo[] = [
     submenu: []
   },
   {
+    path: '/user/blog',
+    title: 'blog',
+    icon: 'icon-Car-Wheel',
+    class: '',
+    extralink: false,
+    submenu: []
+  },
+  {
     path: '',
     title: 'Dashboards',
     icon: 'icon-Car-Wheel',
@@ -875,5 +883,6 @@ export const ROUTES: RouteInfo[] = [
         ]
       }
     ]
-  }
+  },
+  
 ];
