@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private spinner: SpinnerService,
-		private toasterservice:ToastrService,
+		private toasterService:ToastrService,
 	) {}
 
 	ngOnInit() {
@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
 			if(token!=null) {
 				this.spinner.show();
 				this.userService.getUserByToken(token).subscribe((result:any) => {
-					console.log(result);
 					if(result) {
 						this.userInfo = {
 			                token_key: result['data'].accessToken,
@@ -46,16 +45,20 @@ export class LoginComponent implements OnInit {
 			            }
 			            localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
 			            this.spinner.hide();
-						this.toasterservice.success(CodeConstants.MSGS.LOGIN_SUCCESS);
-						this.router.navigateByUrl('user/dashboard');	
+						this.toasterService.success(CodeConstants.MSGS.LOGIN_SUCCESS);
+						this.router.navigateByUrl(this.userInfo.role +'/dashboard');	
 					} else {
 						this.spinner.hide();
-						this.toasterservice.error(CodeConstants.MSGS.ERROR_MSG);
+						this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
 					}
 				},
 				err => {
 					this.spinner.hide();
-					this.toasterservice.error(CodeConstants.MSGS.ERROR_MSG);
+					if(err && err.error && err.error.errorType === "Custom" && err.error.message) { 
+						this.toasterService.error(err.error.message);
+					} else {
+						this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
+					}
 				});
 				
 			}
@@ -63,31 +66,32 @@ export class LoginComponent implements OnInit {
 	}
 
     onSubmit(){
-    // this.spinner.show();
-    // this.userService.loginUser(this.loginuser).subscribe(response=>{
-    //     this.userInfo = {
-    //         token_key: response['data'].token,
-    //         role: response['data']['user']['role'],
-    //         email: response['data']['user']['email'],
-    //         class_name: response['data']['user']['class_name'],
-    //         first_name: response['data']['user']['first_name'],
-    //         last_name: response['data']['user']['last_name'],
-    //         user_id: response['data']['user']['user_id'],
-    //     }
-    //     localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
-    //     this.spinner.hide();
-    //     this.toasterService.success(this.message,' ',{
-    //         timeOut: 10000
-    //      });
-    //     this.router.navigateByUrl(this.returnUrl);
-    // },
-    // err=>{
-    //     this.spinner.hide();
-    //     this.toasterService.error(err,' ',{
-    //         timeOut: 10000
-    //     });
-    // });
-    }
+    	this.spinner.show();
+    	this.userService.authUser(this.loginuser).subscribe((result:any)=>{
+			this.userInfo = {
+				token_key: result['data'].accessToken,
+				role: result['data']['role'],
+				email: result['data']['email'],
+				_id: result['data']['_id'],
+				imageUrl: result['data']['imageUrl'],
+				provider: result['data']['provider'],
+				gender: result['data']['gender']
+			}
+			localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
+			this.spinner.hide();
+			this.router.navigateByUrl(this.userInfo.role +'/dashboard');
+		},
+		err=>{
+			this.spinner.hide();
+			if(err && err.error && err.error.errorType === "Custom" && err.error.message) { 
+				this.toasterService.error(err.error.message);
+			} else { 
+				this.toasterService.error(CodeConstants.MSGS.ERROR_MSG,' ',{
+					timeOut: 10000
+				});
+			}
+		});
+	}
 
 	showRecoverForm() {
 		this.loginform = !this.loginform;

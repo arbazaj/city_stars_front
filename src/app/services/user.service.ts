@@ -14,5 +14,13 @@ export class UserService  {
 		headers = headers.set('Authorization', 'Bearer ' + token);
     	return this.http.get(environment.baseUrl+'/user/getUser',{headers});
     }
+
+    createUser(user: any) {
+        return this.http.post(environment.baseUrl+'/user/createUser', user);
+    }
+
+    authUser(user: any) {
+        return this.http.post(environment.baseUrl+'/user/authUser', user);
+    }
     
 }

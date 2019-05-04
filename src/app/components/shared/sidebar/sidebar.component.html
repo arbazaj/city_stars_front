@@ -4,8 +4,12 @@
         <li>
             <!-- User Profile-->
             <div class="user-profile m-t-20" ngbDropdown>
-                <div class="user-pic">
+                <div class="user-pic" *ngIf="userImage">
                     <img src="{{userImage}}" alt="users" class="rounded-circle img-fluid" />
+                </div>
+                <div class="user-pic" *ngIf="!userImage">
+                    <!-- Login -->
+                    <a href="/login" class="m-b-10 user-name font-medium">Signin / Signup</a>
                 </div>
                 <div class="user-content hide-menu m-t-10">
                     <h5 class="m-b-10 user-name font-medium">{{email}}</h5>
@@ -13,7 +17,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <i class="ti-settings"></i>
                     </a>
-                    <a href="javascript:void(0)" title="Logout" class="btn btn-circle btn-sm">
+                    <a href="javascript:void(0)" title="Logout" (click)="logout()" class="btn btn-circle btn-sm">
                         <i class="ti-power-off"></i>
                     </a>
                     <div class="animated flipInY" aria-labelledby="Userdd" ngbDropdownMenu>
