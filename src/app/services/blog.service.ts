@@ -13,4 +13,12 @@ export class BlogService  {
         return this.http.post(environment.baseUrl+'/blog/saveBlog', blog);
     }
 
+    getApprovedBlogList(){
+        return this.http.get(environment.baseUrl + '/blog/approvedBlogs');
+    }
+
+    getBlogDetails(blogId:string){
+        return this.http.get(environment.baseUrl + `/blog/approvedBlogs/${blogId}`);
+    }
+
 }

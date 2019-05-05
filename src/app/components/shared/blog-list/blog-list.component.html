@@ -1,0 +1,14 @@
+<div class="row">
+  <ng-container >
+  <div class="card col-md-4"  *ngFor="let blog of blogList">
+    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+    <div class="card-body">
+      <h5 class="card-title">{{blog?.user_id?.name}}</h5>
+      <p class="card-text wrapper" [innerHTML]="blog?.blogHtml"></p>
+      <a (click)="readBlog(blog)" class="btn btn-primary">Read Blog</a>
+    </div>
+  </div>
+  </ng-container>
+
+
+</div>
