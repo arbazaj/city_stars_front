@@ -1,16 +1,13 @@
-import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  Location,
   CommonModule,
   LocationStrategy,
-  HashLocationStrategy,
   PathLocationStrategy
 } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -33,7 +30,6 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { JwtInterceptor } from './helpers/jwt.interceptor'
 import { ErrorInterceptor } from './helpers/error.interceptor';
-// import { BlogComponent } from './components/shared/blog/blog.component'
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -74,6 +70,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: ErrorInterceptor, 
+      multi: true 
     }
   ],
   bootstrap: [AppComponent]

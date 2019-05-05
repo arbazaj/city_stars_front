@@ -2,16 +2,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Basic Editor<span> <i *ngIf="showLoader" class="fa fa-refresh fa-spin fa-3x fa-fw"></i></span></h4>
-                <h6 class="card-subtitle">quill editor with angular and TypeScript. ngx-quill is the new angular 2 and
-                    beyond implementation of ngQuill.
-                    <a href="https://github.com/KillerCodeMonkey/ngx-quill" target="_blank">Official website</a>
+                <h6 class="card-title">
+                    Write your blog here and the world will listen <span> <i *ngIf="showLoader" class="fa fa-refresh fa-spin fa-fw"><i class="fas fa-sync-alt"></i></i></span>
                 </h6>
-                <quill-editor [style]="{height: '200px'}" (onEditorCreated)="getEditorInstance($event)" (onContentChanged) = "editorContentChanged($event)"></quill-editor>
+                <quill-editor [style]="{height: '300px'}" (onEditorCreated)="getEditorInstance($event)" (onContentChanged) = "editorContentChanged($event)"></quill-editor>
                 <input type="file" style="display: none" id="fileInputField" accept="image/*"/>
 
             </div>
         </div>
-        <button (click)="submit()">Submit</button>
+        <button (click)="submit()" class="btn btn-danger">Submit <i class="ti-save"></i></button>
     </div>
 </div>

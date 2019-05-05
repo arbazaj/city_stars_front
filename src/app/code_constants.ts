@@ -6,7 +6,14 @@ export class CodeConstants {
 		ONLY_IMAGE_UPLOAD: 'You could only upload images.'
 	};
 
+	public static readonly Roles: any = {
+		USER: 'user',
+		ADMIN: 'admin'
+	};
+
 	public static readonly maxImageSize = 2*1024*1024;
 
 	public static readonly CUSTOM  = "Custom";
+
+	public static readonly BLOG_STATUSES = ['PENDING APPROVAL', 'APPROVED', 'REJECTED'];
 }

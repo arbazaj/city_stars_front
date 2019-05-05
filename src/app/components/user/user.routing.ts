@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BlogComponent } from '../shared/blog/blog.component';
-
+import { AuthGuardService } from '../../guards/auth-guard.service';
 
 export const UserRoutes: Routes = [
   {
@@ -21,10 +21,12 @@ export const UserRoutes: Routes = [
       {
         path: 'blog',
         component: BlogComponent,
+        canActivate: [AuthGuardService],
         data: {
-          title: 'Blog ',
+          role: ['user'],
+          title: 'Blogs',
           urls: [
-            { title: 'Blog', url: 'user/blog' },
+            { title: 'Blogs', url: 'user/blog' },
           ]
         }
       }

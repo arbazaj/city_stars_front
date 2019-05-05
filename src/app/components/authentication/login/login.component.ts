@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
 	loginuser:any = {
         email:'',
         password:''
-    }
+	}
+	returnUrl: string = '';
     public userInfo: any = {};
 	constructor(
 		private userService: UserService,
@@ -29,7 +30,11 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit() {
 		this.route.queryParams.subscribe(params => {
-			let token = params['token'];
+			let token = params['token']
+			if(params['continue']) {
+				this.returnUrl = params['continue'];
+				localStorage.setItem('returnUrl', this.returnUrl);
+			}
 			if(token!=null) {
 				this.spinner.show();
 				this.userService.getUserByToken(token).subscribe((result:any) => {
@@ -43,10 +48,16 @@ export class LoginComponent implements OnInit {
 			                provider: result['data']['provider'],
 			                gender: result['data']['gender']
 			            }
-			            localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
+			            localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 			            this.spinner.hide();
 						this.toasterService.success(CodeConstants.MSGS.LOGIN_SUCCESS);
-						this.router.navigateByUrl(this.userInfo.role +'/dashboard');	
+						let url = localStorage.getItem('returnUrl') || '';
+						if(url) {
+							localStorage.removeItem('returnUrl');
+							this.router.navigateByUrl(url);
+						} else {
+							this.router.navigateByUrl(this.userInfo.role +'/dashboard');	
+						}
 					} else {
 						this.spinner.hide();
 						this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
@@ -68,7 +79,6 @@ export class LoginComponent implements OnInit {
     onSubmit(){
     	this.spinner.show();
     	this.userService.authUser(this.loginuser).subscribe((result:any)=>{
-			console.log(result)
 			this.userInfo = {
 				token_key: result['data'].accessToken,
 				role: result['data']['role'],
@@ -82,7 +92,11 @@ export class LoginComponent implements OnInit {
 			localStorage.setItem("userInfo",JSON.stringify(this.userInfo));
 			this.spinner.hide();
 			this.toasterService.success(CodeConstants.MSGS.LOGIN_SUCCESS);
-			this.router.navigateByUrl(this.userInfo.role +'/dashboard');
+			if(this.returnUrl) {
+				this.router.navigateByUrl(this.returnUrl);
+			} else {
+				this.router.navigateByUrl(this.userInfo.role +'/dashboard');
+			}
 		},
 		err=>{
 			this.spinner.hide();

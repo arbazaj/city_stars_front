@@ -3,6 +3,7 @@ import { UserService } from '../../../services/user.service';
 import { SpinnerService } from '../../../services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { CodeConstants } from '../../../code_constants';
+import { BlogService } from '../../../services/blog.service';
 
 @Component({
   selector: 'app-blog',
@@ -13,23 +14,38 @@ export class BlogComponent implements OnInit {
   valueBind: any;
   quillEditorRef: any;
   showLoader = false;
-  constructor(private userService: UserService, private spinner: SpinnerService,
-    private toasterService: ToastrService) { }
+  blog: string = '';
+  constructor(private userService: UserService, 
+    private spinner: SpinnerService,
+    private toasterService: ToastrService,
+    private blogService: BlogService) { }
 
   ngOnInit() {
   }
 
   submit() {
-    console.log("value", this.quillEditorRef)
+    console.log(this.blog);
+    this.spinner.show();
+    this.blogService.saveBlog({blogHtml: this.blog}).subscribe((result:any) => {
+      this.toasterService.success('Successfull');
+      this.spinner.hide();
+    },
+    err => {
+      this.spinner.hide();
+      if (err && err.error && err.error.errorType === CodeConstants.CUSTOM && err.error.message) {
+        this.toasterService.error(err.error.message);
+      } else {
+        this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
+      }
+    });
   }
 
   editorContentChanged(event: any) {
-    // console.log("content changed", event, event.html)
+    this.blog = event.html;
   }
 
   getEditorInstance(editorInstance: any) {
     this.quillEditorRef = editorInstance;
-    console.log(this.quillEditorRef)
     const toolbar = editorInstance.getModule('toolbar');
     toolbar.addHandler('image', this.imageHandler);
   }
@@ -37,6 +53,7 @@ export class BlogComponent implements OnInit {
   imageHandler = (image: any, callback: any) => {
     const input: any = <HTMLInputElement>document.getElementById('fileInputField');
     const inpElem: any = document.getElementById('fileInputField');
+    inpElem.value = '';
     inpElem.onchange = () => {
       let file: File;
       file = input.files[0];
