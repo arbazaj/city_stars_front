@@ -22,5 +22,11 @@ export class UserService  {
     authUser(user: any) {
         return this.http.post(environment.baseUrl+'/user/authUser', user);
     }
+
+    uploadBlogImage(image:any){
+        const data = new FormData();
+        data.append('image', image);
+        return this.http.post(environment.baseUrl+'/blog/uploadImage' , data);
+    }
     
 }
