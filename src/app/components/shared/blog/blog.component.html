@@ -1,9 +1,20 @@
 <div class="row">
+    <div class="col-md-12">
+        <input class="form-control form-control-lg" name="heading"  (change)="onHeadingChange($event)" type="text" placeholder="Heading *"   required/>
+        <span>
+            <strong *ngIf="headingMsg" class="text-danger">Heading is required...</strong>
+        </span>
+        <span>
+            <strong *ngIf="showBlogMsg" class="text-danger">Write something in the blog...</strong>
+        </span>
+    </div>
+</div>
+<div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <h6 class="card-title">
-                    Write your blog here and the world will listen <span> <i *ngIf="showLoader" class="fa fa-refresh fa-spin fa-fw"><i class="fas fa-sync-alt"></i></i></span>
+                    Write your blog here and the world will listen <span> <i *ngIf="showLoader" class="fa fa-refresh fa-spin fa-fw"><i class="fas fa-sync-alt warning"></i></i></span>
                 </h6>
                 <quill-editor [style]="{height: '300px'}" (onEditorCreated)="getEditorInstance($event)" (onContentChanged) = "editorContentChanged($event)"></quill-editor>
                 <input type="file" style="display: none" id="fileInputField" accept="image/*"/>

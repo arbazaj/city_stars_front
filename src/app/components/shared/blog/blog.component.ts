@@ -4,6 +4,7 @@ import { SpinnerService } from '../../../services/spinner.service';
 import { ToastrService } from 'ngx-toastr';
 import { CodeConstants } from '../../../code_constants';
 import { BlogService } from '../../../services/blog.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-blog',
@@ -15,6 +16,10 @@ export class BlogComponent implements OnInit {
   quillEditorRef: any;
   showLoader = false;
   blog: string = '';
+  heading: string = '';
+  blogLink: string = '';
+  showHeadingMsg: boolean = false;
+  showBlogMsg: boolean = false;
   constructor(private userService: UserService, 
     private spinner: SpinnerService,
     private toasterService: ToastrService,
@@ -24,24 +29,38 @@ export class BlogComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.blog);
-    this.spinner.show();
-    this.blogService.saveBlog({blogHtml: this.blog}).subscribe((result:any) => {
-      this.toasterService.success('Successfull');
-      this.spinner.hide();
-    },
-    err => {
-      this.spinner.hide();
-      if (err && err.error && err.error.errorType === CodeConstants.CUSTOM && err.error.message) {
-        this.toasterService.error(err.error.message);
-      } else {
-        this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
+    if(this.heading && this.blog) {
+      this.spinner.show();
+      this.blogService.saveBlog({blogHtml: this.blog, heading: this.heading}).subscribe((result:any) => {
+        if(result.data) {
+          this.blogLink = environment.appUrl+'/user/blog/'+result.data._id;
+        }
+        this.toasterService.success('Successfull');
+        this.spinner.hide();
+      },
+      err => {
+        this.spinner.hide();
+        if (err && err.error && err.error.errorType === CodeConstants.CUSTOM && err.error.message) {
+          this.toasterService.error(err.error.message);
+        } else {
+          this.toasterService.error(CodeConstants.MSGS.ERROR_MSG);
+        }
+      });
+    } else {
+      if(!this.heading) {
+        this.showHeadingMsg = true;
       }
-    });
+      if(!this.blog) {
+        this.showBlogMsg = true;
+      }
+    }
   }
 
   editorContentChanged(event: any) {
     this.blog = event.html;
+    if(event.html) {
+      this.showBlogMsg = false;
+    }
   }
 
   getEditorInstance(editorInstance: any) {
@@ -57,27 +76,15 @@ export class BlogComponent implements OnInit {
     inpElem.onchange = () => {
       let file: File;
       file = input.files[0];
-      // file type is only image.
       if (/^image\//.test(file.type)) {
         if (file.size > CodeConstants.maxImageSize) {
           this.toasterService.error(CodeConstants.MSGS.IMAGE_SIZE_ERR);
         } else {
           const range = this.quillEditorRef.getSelection();
-          // const reader = new FileReader();
-          // var date = new Date().getTime().toString();
-
-          // reader.onload = () => {
-          //   const img = '<img src="' + reader.result + '" class="'+date+'" />';
-          //   this.quillEditorRef.clipboard.dangerouslyPasteHTML(range.index, img);
-          // };
-          // reader.readAsDataURL(file);
           this.showLoader = true
           this.userService.uploadBlogImage(file).subscribe((res: any) => {
             this.showLoader = false;
             const url = res.data.imageUrl;
-            // const image: any = document.getElementsByClassName(date);
-            // console.log("image", image, date, this.quillEditorRef)
-            // image[0].src = url;
             const img = '<img src="' + url + '" />';
             this.quillEditorRef.clipboard.dangerouslyPasteHTML(range.index, img);
           }, err => {
@@ -97,4 +104,12 @@ export class BlogComponent implements OnInit {
     input.click();
   }
 
+  onHeadingChange(event: any) {
+    if(event.target.value) {
+      this.showHeadingMsg = false;
+    } else {
+      this.showHeadingMsg = true;
+    }
+    this.heading = event.target.value;
+  }
 }
